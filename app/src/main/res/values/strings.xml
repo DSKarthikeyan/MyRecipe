@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">MyRecipe</string>
+    <string name="text_add_to_cart">Add to cart</string>
+    <string name="text_product">Product</string>
+    <string name="text_label">Label</string>
+    <string name="text_price">Price</string>
+    <string name="text_category">Category</string>
+    <string name="text_description">Description</string>
+    <string name="text_status">Status</string>
+    <string name="text_try_again">Try again</string>
+    <string name="text_loading">Loading</string>
+
 </resources>

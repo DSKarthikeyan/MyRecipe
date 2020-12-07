@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.recipeDetails.RecipeDetailsActivity">
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:id="@+id/recyclerViewRecipeList"
+       android:padding="@dimen/_4ssp"/>
+
+   <ProgressBar
+       android:id="@+id/progressCircularBar"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:visibility="invisible"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toTopOf="parent" />
+
+   <androidx.appcompat.widget.AppCompatTextView
+       android:id="@+id/textViewStatus"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="8dp"
+       android:text="@string/text_status"
+       android:textStyle="bold"
+       android:visibility="invisible"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/progressCircularBar" />
+
+   <androidx.appcompat.widget.AppCompatButton
+       android:id="@+id/buttonTryAgain"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_marginTop="6dp"
+       android:padding="@dimen/_8ssp"
+       android:text="@string/text_try_again"
+       android:textAllCaps="false"
+       android:visibility="invisible"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/textViewStatus" />
+</androidx.constraintlayout.widget.ConstraintLayout>
