@@ -1,26 +1,25 @@
 package com.caavo.myrecipe.adapter
 
-import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.caavo.myrecipe.R
 import com.caavo.myrecipe.data.model.RecipeDetails
+import com.caavo.myrecipe.data.repository.RecipeRepository
+import com.caavo.myrecipe.ui.RecipeDetailsImpl
+import com.caavo.myrecipe.ui.recipeDetails.RecipeViewModel
 import kotlinx.android.synthetic.main.recipe_view.view.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 
-class RecipeListAdapter :
+class RecipeListAdapter(
+    private val recipeDetailsImpl: RecipeDetailsImpl,
+    private val recipeViewModel: RecipeViewModel
+) :
     RecyclerView.Adapter<RecipeListAdapter.TrendingRepoHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrendingRepoHolder {
@@ -39,7 +38,22 @@ class RecipeListAdapter :
                 .into(imageViewProduct)
 
             textViewProductName.text = currentList.name
-            textViewPrice.text = currentList.price
+            textViewPrice.text = "RS. ${currentList.price}"
+            var isInCart = false;
+            suspend {
+                isInCart = recipeViewModel.getCartItemById(currentList.productId)
+                Log.d("DSK ", "isincart $isInCart")
+                if (isInCart) {
+                    buttonAddToCart.text = resources.getString(R.string.text_in_cart)
+                } else {
+                    buttonAddToCart.text = resources.getString(R.string.text_add_to_cart)
+                }
+            }
+            buttonAddToCart.setOnClickListener {
+                if (!isInCart) {
+                    recipeDetailsImpl.buttonClickListenerAddToCart(currentList)
+                }
+            }
         }
     }
 
@@ -51,7 +65,7 @@ class RecipeListAdapter :
 
     private val differCallback = object : DiffUtil.ItemCallback<RecipeDetails>() {
         override fun areItemsTheSame(oldItem: RecipeDetails, newItem: RecipeDetails): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.productId == newItem.productId
         }
 
         override fun areContentsTheSame(oldItem: RecipeDetails, newItem: RecipeDetails): Boolean {

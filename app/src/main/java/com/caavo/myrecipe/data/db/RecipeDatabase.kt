@@ -4,10 +4,11 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.caavo.myrecipe.data.model.CartList
 import com.caavo.myrecipe.data.model.RecipeDetails
 
 @Database(
-    entities = [RecipeDetails::class],
+    entities = [RecipeDetails::class, CartList::class],
     version = 1, exportSchema = false
 )
 abstract class RecipeDatabase : RoomDatabase() {

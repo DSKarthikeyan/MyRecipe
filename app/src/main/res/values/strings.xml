@@ -9,5 +9,8 @@
     <string name="text_status">Status</string>
     <string name="text_try_again">Try again</string>
     <string name="text_loading">Loading</string>
+    <string name="text_cart">Cart</string>
+    <string name="text_in_cart">In Cart</string>
+    <string name="text_remove_from_cart">Remove</string>
 
 </resources>

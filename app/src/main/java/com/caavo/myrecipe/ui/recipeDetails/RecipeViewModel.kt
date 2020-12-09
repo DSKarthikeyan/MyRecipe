@@ -5,8 +5,10 @@ import android.net.ConnectivityManager
 import android.net.ConnectivityManager.*
 import android.net.NetworkCapabilities.*
 import android.os.Build
+import android.util.Log
 import androidx.lifecycle.*
 import com.caavo.myrecipe.RecipeApplication
+import com.caavo.myrecipe.data.model.CartList
 import com.caavo.myrecipe.data.model.RecipeDetails
 import com.caavo.myrecipe.data.repository.RecipeRepository
 import com.caavo.myrecipe.util.Resource
@@ -25,24 +27,24 @@ class RecipeViewModel(
     /**
      * fun: to get Trending Repo details from server
      */
-    fun getTrendingRepo() = viewModelScope.launch {
-        getTrendingRepoDetails()
+    fun getRecipes() = viewModelScope.launch {
+        getRecipesFromServer()
     }
 
     /**
      * fun: get trending repo from local database through repository
      */
-    fun getTrendingRepoFromLocal() = recipeRepository.getRecipesFromLocal()
+    fun getRecipesFromLocal() = recipeRepository.getRecipesFromLocal()
 
     /**
      * fun: get trending repo from server
      */
-    private suspend fun getTrendingRepoDetails() {
+    private suspend fun getRecipesFromServer() {
         try {
             if (hasInternetConnection()) {
                 recipeList.postValue(Resource.Loading())
                 val response = recipeRepository.getRecipeDetails()
-                recipeList.postValue(handleTrendingReposResponse(response))
+                recipeList.postValue(handleRecipeResponse(response))
             } else {
                 recipeList.postValue(Resource.Error("No Internet Connection"))
             }
@@ -54,11 +56,29 @@ class RecipeViewModel(
         }
     }
 
+    suspend fun insertCartData(cartData: CartList) {
+        viewModelScope.launch {
+            recipeRepository.insertCartList(cartData)
+        }
+    }
+
+    /**
+     * fun: get Cart Item by productId from LocalDB
+     */
+    fun getCartItemById(productId: Int): Boolean {
+        var id: Boolean = false;
+        viewModelScope.launch(Dispatchers.IO){
+            id = recipeRepository.getCartItemById(productId)
+            Log.d("DSK "," isincart1 $id");
+        }
+        return id;
+    }
+
     /**
      * fun: toHandle RepoDetails input and insert to LocalDB
      *    and to return if Server fetched response is successful
      */
-    private fun handleTrendingReposResponse(response: Response<List<RecipeDetails>>): Resource<List<RecipeDetails>>? {
+    private fun handleRecipeResponse(response: Response<List<RecipeDetails>>): Resource<List<RecipeDetails>>? {
         if (response.isSuccessful) {
             response.body()?.let { resultResponse ->
                 viewModelScope.launch(Dispatchers.IO) {

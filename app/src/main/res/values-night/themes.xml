@@ -15,7 +15,7 @@
         <item name="toolbarStyle">@style/ToolBarStyle</item>
         <!-- Button Style -->
         <item name="materialButtonStyle">@style/ButtonColor</item>
-        <item name="colorButtonNormal">@color/light_white</item>
+        <item name="colorButtonNormal">@color/dark</item>
     </style>
 
     <style name="ButtonColor" parent="@android:style/Widget.Button">
