@@ -1,6 +1,5 @@
 package com.caavo.myrecipe.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +10,7 @@ import com.bumptech.glide.Glide
 import com.caavo.myrecipe.R
 import com.caavo.myrecipe.data.model.CartList
 import com.caavo.myrecipe.data.model.RecipeDetails
-import com.caavo.myrecipe.data.repository.RecipeRepository
 import com.caavo.myrecipe.ui.RecipeDetailsImpl
-import com.caavo.myrecipe.ui.cartDetails.CartViewModel
 import com.caavo.myrecipe.ui.recipeDetails.RecipeViewModel
 import kotlinx.android.synthetic.main.recipe_view.view.*
 import kotlinx.coroutines.*
