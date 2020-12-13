@@ -9,16 +9,19 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.caavo.myrecipe.R
+import com.caavo.myrecipe.data.model.CartList
 import com.caavo.myrecipe.data.model.RecipeDetails
 import com.caavo.myrecipe.data.repository.RecipeRepository
 import com.caavo.myrecipe.ui.RecipeDetailsImpl
+import com.caavo.myrecipe.ui.cartDetails.CartViewModel
 import com.caavo.myrecipe.ui.recipeDetails.RecipeViewModel
 import kotlinx.android.synthetic.main.recipe_view.view.*
+import kotlinx.coroutines.*
 
 
 class RecipeListAdapter(
     private val recipeDetailsImpl: RecipeDetailsImpl,
-    private val recipeViewModel: RecipeViewModel
+    private val recipeViewModel: RecipeViewModel,
 ) :
     RecyclerView.Adapter<RecipeListAdapter.TrendingRepoHolder>() {
 
@@ -38,20 +41,21 @@ class RecipeListAdapter(
                 .into(imageViewProduct)
 
             textViewProductName.text = currentList.name
-            textViewPrice.text = "RS. ${currentList.price}"
-            var isInCart = false;
-            suspend {
-                isInCart = recipeViewModel.getCartItemById(currentList.productId)
-                Log.d("DSK ", "isincart $isInCart")
-                if (isInCart) {
+            textViewPrice.text =   "RS. ${currentList.price}"
+            val value = GlobalScope.launch(Dispatchers.IO) {
+                var isInCart: CartList = recipeViewModel.getCartItemById(currentList.productId)
+
+                if (isInCart!=null && isInCart.productId == currentList.productId) {
                     buttonAddToCart.text = resources.getString(R.string.text_in_cart)
                 } else {
                     buttonAddToCart.text = resources.getString(R.string.text_add_to_cart)
                 }
-            }
-            buttonAddToCart.setOnClickListener {
-                if (!isInCart) {
-                    recipeDetailsImpl.buttonClickListenerAddToCart(currentList)
+                buttonAddToCart.setOnClickListener {
+                    if (isInCart == null || isInCart.productId != currentList.productId) {
+                        buttonAddToCart.text = resources.getString(R.string.text_in_cart)
+                        recipeDetailsImpl.buttonClickListenerAddToCart(currentList)
+                    }
+
                 }
             }
         }

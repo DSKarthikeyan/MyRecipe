@@ -15,13 +15,13 @@ interface RecipeDAO {
     fun getAllRecipeDetails(): LiveData<List<RecipeDetails>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCartList(objects: CartList?)
+    suspend fun insertCartList(objects: CartList?):Long
 
     @Query("SELECT * FROM cart_details")
     fun getAllCartList(): LiveData<List<CartList>>
 
-    @Query("SELECT EXISTS(SELECT * FROM cart_details where productId is :productId)")
-    fun getCartItemById(productId: Int): Boolean
+    @Query("SELECT * FROM cart_details where productId is :productId")
+    fun getCartItemById(productId: Int): CartList
 
     @Query("Delete from cart_details where productId is :productId")
     fun deleteItemInCart(productId: Int): Int

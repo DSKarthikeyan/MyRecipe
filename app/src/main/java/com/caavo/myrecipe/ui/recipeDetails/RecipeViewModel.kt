@@ -13,6 +13,8 @@ import com.caavo.myrecipe.data.model.RecipeDetails
 import com.caavo.myrecipe.data.repository.RecipeRepository
 import com.caavo.myrecipe.util.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import okio.IOException
 import retrofit2.Response
@@ -56,22 +58,21 @@ class RecipeViewModel(
         }
     }
 
-    suspend fun insertCartData(cartData: CartList) {
+    suspend fun insertCartData(cartData: CartList):Long {
+        var isInsertedInLocal: Long = -1
         viewModelScope.launch {
-            recipeRepository.insertCartList(cartData)
+           isInsertedInLocal =  recipeRepository.insertCartList(cartData)
         }
+        return isInsertedInLocal;
     }
 
     /**
      * fun: get Cart Item by productId from LocalDB
      */
-    fun getCartItemById(productId: Int): Boolean {
-        var id: Boolean = false;
-        viewModelScope.launch(Dispatchers.IO){
-            id = recipeRepository.getCartItemById(productId)
-            Log.d("DSK "," isincart1 $id");
-        }
-        return id;
+    suspend fun getCartItemById(productId: Int): CartList {
+
+            return recipeRepository.getCartItemById(productId)
+//            Log.d("DSK "," isincart1 $id")
     }
 
     /**

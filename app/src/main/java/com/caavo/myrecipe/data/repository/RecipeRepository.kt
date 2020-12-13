@@ -16,7 +16,7 @@ class RecipeRepository(private val recipeDatabase: RecipeDatabase) {
      * fun: To Insert List of Repo details to Local DB
      */
     suspend fun upsert(reposDetails: List<RecipeDetails>) =
-            recipeDatabase.getRecipeDetailsDAO().upsert(reposDetails)
+        recipeDatabase.getRecipeDetailsDAO().upsert(reposDetails)
 
     /**
      * fun: toGet All Live Trending Repo Details from Local DB
@@ -27,13 +27,14 @@ class RecipeRepository(private val recipeDatabase: RecipeDatabase) {
     /**
      * fun: To Insert List of Repo details to Local DB
      */
-    suspend fun insertCartList(cartList: CartList) =
+    suspend fun insertCartList(cartList: CartList): Long =
         recipeDatabase.getRecipeDetailsDAO().insertCartList(cartList)
-
 
     fun getCartDetails() = recipeDatabase.getRecipeDetailsDAO().getAllCartList()
 
-    fun getCartItemById(itemProductId: Int): Boolean = recipeDatabase.getRecipeDetailsDAO().getCartItemById(itemProductId)
+    suspend fun getCartItemById(itemProductId: Int): CartList =
+        recipeDatabase.getRecipeDetailsDAO().getCartItemById(itemProductId)
 
-    fun deleteItemInCart(itemProductId: Int): Int = recipeDatabase.getRecipeDetailsDAO().deleteItemInCart(itemProductId)
+    fun deleteItemInCart(itemProductId: Int): Int =
+        recipeDatabase.getRecipeDetailsDAO().deleteItemInCart(itemProductId)
 }

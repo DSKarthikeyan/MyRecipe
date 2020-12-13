@@ -23,17 +23,14 @@ import com.caavo.myrecipe.data.repository.RecipeRepository
 import com.caavo.myrecipe.ui.RecipeDetailsImpl
 import com.caavo.myrecipe.ui.cartDetails.CartDetailsActivity
 import com.caavo.myrecipe.util.Resource
+import kotlinx.android.synthetic.main.recipe_activity.*
 import kotlinx.coroutines.*
+import okhttp3.internal.notifyAll
 
 class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
 
     lateinit var recipeViewModel: RecipeViewModel
     lateinit var recipeListAdapter: RecipeListAdapter
-    lateinit var recipeListoRecyclerView: RecyclerView
-    lateinit var progressBarCircular: ProgressBar
-    private lateinit var textViewStatus: TextView
-    private lateinit var buttonTryAgain: Button
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,14 +42,9 @@ class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
      * fun: initialize View Objects
      */
     private fun initializeViews() {
-        recipeListoRecyclerView = findViewById(R.id.recyclerViewRecipeList)
-        progressBarCircular = findViewById(R.id.progressCircularBar)
-        textViewStatus = findViewById(R.id.textViewStatus)
-        buttonTryAgain = findViewById(R.id.buttonTryAgain)
-
         initTrendingRepoView()
 
-        buttonTryAgain.setOnClickListener { recipeViewModel.getTrendingRepo() }
+        buttonTryAgain.setOnClickListener { recipeViewModel.getRecipes() }
     }
 
     /**
@@ -103,8 +95,8 @@ class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
      * fun: Hide loading Progress Bar
      */
     private fun hideProgressBar() {
-        recipeListoRecyclerView.visibility = View.VISIBLE
-        progressBarCircular.visibility = View.INVISIBLE
+        recyclerViewRecipeList.visibility = View.VISIBLE
+        progressCircularBar.visibility = View.INVISIBLE
         textViewStatus.visibility = View.INVISIBLE
         buttonTryAgain.visibility = View.INVISIBLE
     }
@@ -113,8 +105,8 @@ class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
      * fun: show progress bar
      */
     private fun showProgressBar() {
-        recipeListoRecyclerView.visibility = View.INVISIBLE
-        progressBarCircular.visibility = View.VISIBLE
+        recyclerViewRecipeList.visibility = View.INVISIBLE
+        progressCircularBar.visibility = View.VISIBLE
         showLoadingText(resources.getString(R.string.text_loading))
         buttonTryAgain.visibility = View.INVISIBLE
     }
@@ -124,7 +116,7 @@ class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
      */
     private fun showLoadingText(message: String) {
         if (message.isNotEmpty()) {
-            recipeListoRecyclerView.visibility = View.INVISIBLE
+            recyclerViewRecipeList.visibility = View.INVISIBLE
             textViewStatus.visibility = View.VISIBLE
             textViewStatus.text = message
             buttonTryAgain.visibility = View.VISIBLE
@@ -135,18 +127,22 @@ class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
      * fun: setup Recycler View
      */
     private fun setupRecyclerView() {
-        recipeListAdapter = RecipeListAdapter(this,recipeViewModel)
-        recipeListoRecyclerView.apply {
+        recipeListAdapter = RecipeListAdapter(this, recipeViewModel)
+        recyclerViewRecipeList.apply {
             adapter = recipeListAdapter
             layoutManager = GridLayoutManager(this@RecipeDetailsActivity, 2)
         }
     }
 
-    override fun buttonClickListenerAddToCart(recipeDetails : RecipeDetails) {
-//        Toast.makeText(this, "Clicked: ${recipeDetails.name}", Toast.LENGTH_LONG).show()
-        GlobalScope.launch (Dispatchers.Main){
+    override fun buttonClickListenerAddToCart(recipeDetails: RecipeDetails) {
+        GlobalScope.launch(Dispatchers.Main) {
             recipeViewModel.apply {
-                val cartList= CartList(recipeDetails.productId,recipeDetails.image,recipeDetails.name,recipeDetails.price)
+                val cartList = CartList(
+                    recipeDetails.productId,
+                    recipeDetails.image,
+                    recipeDetails.name,
+                    recipeDetails.price
+                )
                 insertCartData(cartList)
             }
         }
@@ -156,6 +152,7 @@ class RecipeDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
     private fun openCartDetailsActivity() {
         val intent = Intent(this, CartDetailsActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     /**

@@ -1,10 +1,12 @@
 package com.caavo.myrecipe.ui.cartDetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,7 @@ import com.caavo.myrecipe.data.model.CartList
 import com.caavo.myrecipe.data.model.RecipeDetails
 import com.caavo.myrecipe.data.repository.RecipeRepository
 import com.caavo.myrecipe.ui.RecipeDetailsImpl
+import com.caavo.myrecipe.ui.recipeDetails.RecipeDetailsActivity
 import com.caavo.myrecipe.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -97,6 +100,18 @@ class CartDetailsActivity : AppCompatActivity(), RecipeDetailsImpl {
             textViewStatus.visibility = View.VISIBLE
             textViewStatus.text = message
         }
+    }
+
+    /** Called when the user taps the Send button */
+    private fun openRecipeDetailsActivity() {
+        val intent = Intent(this, RecipeDetailsActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        openRecipeDetailsActivity()
     }
 
 }

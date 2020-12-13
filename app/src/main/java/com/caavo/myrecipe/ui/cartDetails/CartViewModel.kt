@@ -14,14 +14,13 @@ class CartViewModel(
     var cartList: LiveData<List<CartList>> = MutableLiveData()
 
     init {
-
-        cartList =  getTrendingRepoDetails()
+        cartList =  getCartDetails()
     }
 
     /**
      * fun: get trending repo from server
      */
-    private fun getTrendingRepoDetails(): LiveData<List<CartList>> {
+    private fun getCartDetails(): LiveData<List<CartList>> {
         return recipeRepository.getCartDetails()
     }
 
